@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Our.Umbraco.CropHealer
+﻿namespace Our.Umbraco.CropHealer
 {
+    using System;
+    using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
+
+    using Newtonsoft.Json;
 
     using global::Umbraco.Core;
     using global::Umbraco.Core.Logging;
     using global::Umbraco.Core.Models;
     using global::Umbraco.Core.Services;
     using global::Umbraco.Web.Models;
-
-    using Newtonsoft.Json;
 
     public static class CropHealer
     {

@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Our.Umbraco.CropHealer
+﻿namespace Our.Umbraco.CropHealer
 {
     using global::Umbraco.Core;
-    using global::Umbraco.Core.Models;
     using global::Umbraco.Core.Services;
 
     public class UmbracoEvents : ApplicationEventHandler
