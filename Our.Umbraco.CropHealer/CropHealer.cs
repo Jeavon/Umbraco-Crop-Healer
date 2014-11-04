@@ -18,32 +18,55 @@
         internal static void SeekandHeal(IDataTypeDefinition dataType, IDataTypeService dts)
         {
             var cts = ApplicationContext.Current.Services.ContentTypeService;
-            var cs = ApplicationContext.Current.Services.ContentService;
             var mts = ApplicationContext.Current.Services.MemberTypeService;
 
+            var cs = ApplicationContext.Current.Services.ContentService;
+            var ms = ApplicationContext.Current.Services.MediaService;
+            var mems = ApplicationContext.Current.Services.MemberService;
+
             var dataTypeId = dataType.Id;
-            var propertyEditor = dataType.PropertyEditorAlias;
-            if (propertyEditor == Constants.PropertyEditors.ImageCropperAlias)
+            
+            // A Image Cropper Data Type has been saved, lets go to work!
+            var allContentTypes = cts.GetAllContentTypes();
+            var allMediaTypes = cts.GetAllMediaTypes();
+            var allMemberTypes = mts.GetAll();
+
+            // Content
+            foreach (var contentType in allContentTypes)
             {
-                // A Image Cropper Data Type has been saved, lets go to work!
-                var allContentTypes = cts.GetAllContentTypes();
-                var allMediaTypes = cts.GetAllMediaTypes();
-                var allMemberTypes = mts.GetAll();
-
-                foreach (var contentType in allContentTypes)
+                var contentTypeId = contentType.Id;
+                var cropperContentProperties = contentType.PropertyTypes.Where(x => x.DataTypeDefinitionId == dataTypeId);
+                if (cropperContentProperties.Any())
                 {
-                    var contentTypeId = contentType.Id;
-                    var cropperContentProperties = contentType.PropertyTypes.Where(x => x.DataTypeDefinitionId == dataTypeId);
-                    if (cropperContentProperties.Any())
-                    {
-                        var allContentUsingThis = cs.GetContentOfContentType(contentTypeId); 
-                        HealContentItems(allContentUsingThis, cropperContentProperties, dataTypeId, dts, cs);
-                    }
+                    var allContentUsingThis = cs.GetContentOfContentType(contentTypeId); 
+                    HealContentItems(allContentUsingThis, cropperContentProperties, dataTypeId, dts, cs);
                 }
-
-                // ** DON'T FORGET THE MEDIA and MEMBERS **
-
             }
+
+            // Media
+            foreach (var mediaType in allMediaTypes)
+            {
+                var mediaTypeId = mediaType.Id;
+                var cropperContentProperties = mediaType.PropertyTypes.Where(x => x.DataTypeDefinitionId == dataTypeId);
+                if (cropperContentProperties.Any())
+                {
+                    var allMediaUsingThis = ms.GetMediaOfMediaType(mediaTypeId);
+                    HealMediaItems(allMediaUsingThis, cropperContentProperties, dataTypeId, dts, ms);
+                }
+            }
+
+            // Member
+            foreach (var memberType in allMemberTypes)
+            {
+                var memberTypeId = memberType.Id;
+                var cropperContentProperties = memberType.PropertyTypes.Where(x => x.DataTypeDefinitionId == dataTypeId);
+                if (cropperContentProperties.Any())
+                {
+                    var allMembersUsingThis = mems.GetMembersByMemberType(memberTypeId);
+                    HealMemberItems(allMembersUsingThis, cropperContentProperties, dataTypeId, dts, mems);
+                }
+            }
+            
         }
 
         private static void HealContentItems(IEnumerable<IContent> content, IEnumerable<PropertyType> cropperContentProperties, int dataTypeId, IDataTypeService dts, IContentService cs)
@@ -84,6 +107,62 @@
                             contentItem.Id,
                             contentItem.ContentType.Alias));
                 }
+            }
+        }
+
+        private static void HealMediaItems(IEnumerable<IMedia> media, IEnumerable<PropertyType> cropperContentProperties, int dataTypeId, IDataTypeService dts, IMediaService ms)
+        {
+            foreach (var mediaItem in media)
+            {
+                // There could be multiple uses of the same datatype on the content type 
+                foreach (var cropperContentProperty in cropperContentProperties)
+                {
+                    var cropperPropertyValue = mediaItem.GetValue<string>(cropperContentProperty.Alias);
+
+                    var cropDataSet = cropperPropertyValue.SerializeToCropDataSet();
+
+                    var attemptHeal = GetCropFromDataType(dataTypeId, cropDataSet, cropperPropertyValue, dts);
+                    if (attemptHeal != null)
+                    {
+                        mediaItem.SetValue(cropperContentProperty.Alias, attemptHeal);
+                    }
+                }
+
+                ms.Save(mediaItem);
+                LogHelper.Info(
+                    typeof(CropHealer),
+                    string.Format(
+                        "Healed a Image Cropper in media (NodeId:{0} DocumentTypeAlias:{1})",
+                        mediaItem.Id,
+                        mediaItem.ContentType.Alias));             
+            }
+        }
+
+        private static void HealMemberItems(IEnumerable<IMember> member, IEnumerable<PropertyType> cropperContentProperties, int dataTypeId, IDataTypeService dts, IMemberService mems)
+        {
+            foreach (var memberItem in member)
+            {
+                // There could be multiple uses of the same datatype on the content type 
+                foreach (var cropperContentProperty in cropperContentProperties)
+                {
+                    var cropperPropertyValue = memberItem.GetValue<string>(cropperContentProperty.Alias);
+
+                    var cropDataSet = cropperPropertyValue.SerializeToCropDataSet();
+
+                    var attemptHeal = GetCropFromDataType(dataTypeId, cropDataSet, cropperPropertyValue, dts);
+                    if (attemptHeal != null)
+                    {
+                        memberItem.SetValue(cropperContentProperty.Alias, attemptHeal);
+                    }
+                }
+
+                mems.Save(memberItem);
+                LogHelper.Info(
+                    typeof(CropHealer),
+                    string.Format(
+                        "Healed a Image Cropper in member (NodeId:{0} DocumentTypeAlias:{1})",
+                        memberItem.Id,
+                        memberItem.ContentType.Alias));
             }
         }
 

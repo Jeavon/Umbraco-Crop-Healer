@@ -11,10 +11,14 @@
         }
 
         void DataTypeService_Saved(IDataTypeService sender, global::Umbraco.Core.Events.SaveEventArgs<global::Umbraco.Core.Models.IDataTypeDefinition> e)
-        {
+        {          
             foreach (var dataType in e.SavedEntities)
             {
-                CropHealer.SeekandHeal(dataType, sender);
+                var propertyEditor = dataType.PropertyEditorAlias;
+                if (propertyEditor == Constants.PropertyEditors.ImageCropperAlias)
+                {
+                    CropHealer.SeekandHeal(dataType, sender);
+                }
             }
         }
     }
