@@ -4,21 +4,22 @@
     // AncestorsOrSelf is all of the ancestors this page has in the tree
     // (1) means: go up to level 1 and stop looking for more ancestors when you get there
     // First() gets the first ancestor found (the home page, on level 1)
-    var homePage = CurrentPage.AncestorsOrSelf(1).First();
+    var homePage = Model.Content.AncestorsOrSelf(1).First();
 }
 <!-- Features -->
 <section class="is-features">
     <h2 class="major"><span>Wonderful featured pages</span></h2>
     <div>
         <div class="row">
-            @foreach (var feature in homePage.umbTextPages.Where("featuredPage"))
+            @foreach (var feature in homePage.Children().Where(x => x.DocumentTypeAlias == "umbTextPage" && x.GetPropertyValue<bool>("featuredPage")))
             {
                 <div class="3u">
                     <!-- Feature -->
                     <section class="is-feature">
-                        <a href="@feature.Url" class="image image-full"><img src="@feature.Image" alt="" /></a>
+                        <pre>@feature.GetPropertyValue("Image")</pre>
+                        <a href="@feature.Url" class="image image-full"><img src="@feature.GetCropUrl("Image","Thumb")" alt="" /></a>
                         <h3><a href="@feature.Url">@feature.Name</a></h3>
-                        @Umbraco.Truncate(feature.BodyText, 100)
+                        @Umbraco.Truncate(feature.GetPropertyValue<string>("bodyText"), 100)
                     </section>
                     <!-- /Feature -->
                 </div>
