@@ -15,7 +15,7 @@
 
     public static class CropHealer
     {
-        internal static void SeekandHeal(IDataTypeDefinition dataType, IDataTypeService dts)
+        internal static void SeekAndHeal(IDataTypeDefinition dataType, IDataTypeService dts)
         {
             var cts = ApplicationContext.Current.Services.ContentTypeService;
             var mts = ApplicationContext.Current.Services.MemberTypeService;

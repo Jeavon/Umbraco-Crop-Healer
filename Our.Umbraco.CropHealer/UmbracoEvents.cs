@@ -17,7 +17,7 @@
                 var propertyEditor = dataType.PropertyEditorAlias;
                 if (propertyEditor == Constants.PropertyEditors.ImageCropperAlias)
                 {
-                    CropHealer.SeekandHeal(dataType, sender);
+                    CropHealer.SeekAndHeal(dataType, sender);
                 }
             }
         }
