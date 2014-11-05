@@ -7,6 +7,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Our.Umbraco.CropHealer", "O
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSite", "TestSite\TestSite.csproj", "{527C6E46-9B93-4014-9236-DBC3E4355F80}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildPackage", "BuildPackage", "{87A0BA0A-3151-4F30-BFC8-E4D4FCFFAFBC}"
+	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+		BuildPackage\Build.bat = BuildPackage\Build.bat
+		BuildPackage\Package.build.xml = BuildPackage\Package.build.xml
+		BuildPackage\package.nuspec = BuildPackage\package.nuspec
+		BuildPackage\Package.xml = BuildPackage\Package.xml
+		BuildPackage\Test.bat = BuildPackage\Test.bat
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
