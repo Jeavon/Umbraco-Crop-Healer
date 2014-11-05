@@ -1,4 +1,7 @@
-﻿namespace Our.Umbraco.CropHealer
+﻿using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Our.Umbraco.CropHealer.Tests")]
+namespace Our.Umbraco.CropHealer
 {
     using System;
     using System.Collections.Generic;
@@ -195,7 +198,7 @@
             return null;
         }
 
-        private static string ImageCropDataSetRepair(this ImageCropDataSet cropDataSet, string json, List<ImageCropData> imageCrops = null)
+        internal static string ImageCropDataSetRepair(this ImageCropDataSet cropDataSet, string json, List<ImageCropData> imageCrops = null)
         {
             var healedSomething = false;
 
@@ -283,7 +286,7 @@
                    || (input.StartsWith("[") && input.EndsWith("]"));
         }
 
-        private static ImageCropDataSet SerializeToCropDataSet(this string json)
+        internal static ImageCropDataSet SerializeToCropDataSet(this string json)
         {
             var imageCrops = new ImageCropDataSet();
             if (json.DetectIsJson())
