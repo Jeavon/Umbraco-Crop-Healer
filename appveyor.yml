@@ -8,13 +8,10 @@ install:
   - cmd: set UMBRACO_PACKAGE_MIN_VERSION=7.1.8
   - cmd: cd BuildPackage
   - cmd: Build.bat
+  - cmd: nunit-console Our.Umbraco.CropHealer.Tests\bin\Debug\Our.Umbraco.CropHealer.Tests.dll
 
 # to disable automatic builds
 build: off
-
-test:
-  assemblies:
-    - '**\*.Tests.dll'
 
 artifacts:
   - path: BuildPackage\Package\*.nupkg
