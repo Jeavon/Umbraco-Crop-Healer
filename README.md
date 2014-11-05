@@ -14,8 +14,8 @@ The username and password for the test site are admin/password
 
 ## Roadmap ##
 
-v0.1-beta - Attach to data type save event and propagate changes to content, media & members
-v0.2-beta - Add dashboard control to allow for a specific data type to be healed on request and make data type save event optional
-v1.0 - Release
+- v0.1-beta Attach to data type save event and propagate changes to content, media & members
+- v0.2-beta Add dashboard control to allow for a specific data type to be healed on request and make data type save event optional
+- v1.0 Release
 
 This project is [MIT](http://opensource.org/licenses/mit-license.php) licensed
