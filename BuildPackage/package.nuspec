@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>Our.Umbraco.CropHealer</id>
+        <version>0.0.0</version>
+        <title>Umbraco CropHealer</title>
+        <authors>The Umbraco Community</authors>
+        <owners>The Umbraco Community</owners>
+        <projectUrl>https://github.com/Jeavon/Umbraco-Crop-Healer</projectUrl>
+        <iconUrl>https://raw.githubusercontent.com/Jeavon/Umbraco-Core-Property-Value-Converters/master/PropertyValueConverters.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>This package adds and event handler to the save event of a data type to ensure changes to crops are propagated to content, media and content.</description>
+        <summary>This package adds and event handler to the save event of a data type to ensure changes to crops are propagated to content, media and content.</summary>
+        <copyright>The Umbraco Community</copyright>
+        <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
+        <language>en-GB</language>
+        <tags>umbraco</tags>
+        <dependencies>
+            <dependency id="UmbracoCms.Core" version="7.1.8" />
+        </dependencies>
+    </metadata>    
+</package>
