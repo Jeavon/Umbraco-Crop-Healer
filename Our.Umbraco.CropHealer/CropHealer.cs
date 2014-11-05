@@ -2,10 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
 
     using Newtonsoft.Json;
+
+    using umbraco;
 
     using global::Umbraco.Core;
     using global::Umbraco.Core.Logging;
@@ -31,6 +32,8 @@
             var allMediaTypes = cts.GetAllMediaTypes();
             var allMemberTypes = mts.GetAll();
 
+            var dataTypeCrops = GetCropsFromDataType(dataTypeId, dts);
+
             // Content
             foreach (var contentType in allContentTypes)
             {
@@ -38,8 +41,8 @@
                 var cropperContentProperties = contentType.PropertyTypes.Where(x => x.DataTypeDefinitionId == dataTypeId);
                 if (cropperContentProperties.Any())
                 {
-                    var allContentUsingThis = cs.GetContentOfContentType(contentTypeId); 
-                    HealContentItems(allContentUsingThis, cropperContentProperties, dataTypeId, dts, cs);
+                    var allContentUsingThis = cs.GetContentOfContentType(contentTypeId);
+                    HealContentItems(allContentUsingThis, cropperContentProperties, dataTypeCrops, dts, cs);
                 }
             }
 
@@ -51,7 +54,7 @@
                 if (cropperContentProperties.Any())
                 {
                     var allMediaUsingThis = ms.GetMediaOfMediaType(mediaTypeId);
-                    HealMediaItems(allMediaUsingThis, cropperContentProperties, dataTypeId, dts, ms);
+                    HealMediaItems(allMediaUsingThis, cropperContentProperties, dataTypeCrops, dts, ms);
                 }
             }
 
@@ -63,13 +66,13 @@
                 if (cropperContentProperties.Any())
                 {
                     var allMembersUsingThis = mems.GetMembersByMemberType(memberTypeId);
-                    HealMemberItems(allMembersUsingThis, cropperContentProperties, dataTypeId, dts, mems);
+                    HealMemberItems(allMembersUsingThis, cropperContentProperties, dataTypeCrops, dts, mems);
                 }
             }
             
         }
 
-        private static void HealContentItems(IEnumerable<IContent> content, IEnumerable<PropertyType> cropperContentProperties, int dataTypeId, IDataTypeService dts, IContentService cs)
+        private static void HealContentItems(IEnumerable<IContent> content, IEnumerable<PropertyType> cropperContentProperties, List<ImageCropData> dataTypeCrops, IDataTypeService dts, IContentService cs)
         {
             foreach (var contentItem in content)
             {
@@ -77,10 +80,9 @@
                 foreach (var cropperContentProperty in cropperContentProperties)
                 {
                     var cropperPropertyValue = contentItem.GetValue<string>(cropperContentProperty.Alias);
-
                     var cropDataSet = cropperPropertyValue.SerializeToCropDataSet();
+                    var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, dataTypeCrops);
 
-                    var attemptHeal = GetCropFromDataType(dataTypeId, cropDataSet, cropperPropertyValue, dts);
                     if (attemptHeal != null)
                     {
                         contentItem.SetValue(cropperContentProperty.Alias, attemptHeal);
@@ -110,7 +112,7 @@
             }
         }
 
-        private static void HealMediaItems(IEnumerable<IMedia> media, IEnumerable<PropertyType> cropperContentProperties, int dataTypeId, IDataTypeService dts, IMediaService ms)
+        private static void HealMediaItems(IEnumerable<IMedia> media, IEnumerable<PropertyType> cropperContentProperties, List<ImageCropData> dataTypeCrops, IDataTypeService dts, IMediaService ms)
         {
             foreach (var mediaItem in media)
             {
@@ -121,7 +123,7 @@
 
                     var cropDataSet = cropperPropertyValue.SerializeToCropDataSet();
 
-                    var attemptHeal = GetCropFromDataType(dataTypeId, cropDataSet, cropperPropertyValue, dts);
+                    var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, dataTypeCrops);
                     if (attemptHeal != null)
                     {
                         mediaItem.SetValue(cropperContentProperty.Alias, attemptHeal);
@@ -138,7 +140,7 @@
             }
         }
 
-        private static void HealMemberItems(IEnumerable<IMember> member, IEnumerable<PropertyType> cropperContentProperties, int dataTypeId, IDataTypeService dts, IMemberService mems)
+        private static void HealMemberItems(IEnumerable<IMember> member, IEnumerable<PropertyType> cropperContentProperties, List<ImageCropData> dataTypeCrops, IDataTypeService dts, IMemberService mems)
         {
             foreach (var memberItem in member)
             {
@@ -149,7 +151,7 @@
 
                     var cropDataSet = cropperPropertyValue.SerializeToCropDataSet();
 
-                    var attemptHeal = GetCropFromDataType(dataTypeId, cropDataSet, cropperPropertyValue, dts);
+                    var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, dataTypeCrops);
                     if (attemptHeal != null)
                     {
                         memberItem.SetValue(cropperContentProperty.Alias, attemptHeal);
@@ -166,20 +168,29 @@
             }
         }
 
-        private static string GetCropFromDataType(int dataTypeId, ImageCropDataSet cropDataSet, string json, IDataTypeService dts)
-        {
-            var preValueJson =
-                dts.GetPreValuesCollectionByDataTypeId(dataTypeId)
-                    .PreValuesAsDictionary.FirstOrDefault(x => x.Key.ToLower(CultureInfo.InvariantCulture) == "crops")
-                    .Value.Value;
+        private static List<ImageCropData> GetCropsFromDataType(int dataTypeId, IDataTypeService dts)
+        {        
+            // ** Currently there is a Umbraco bug which means this doesn't workm using the ever faithful uQuery as a workaround **
 
-            var cropperPreValues = JsonConvert.DeserializeObject<List<ImageCropData>>(preValueJson);
+            //var preValueJson =
+            //    dts.GetPreValuesCollectionByDataTypeId(dataTypeId)
+            //        .PreValuesAsDictionary.FirstOrDefault(x => x.Key.ToLower(CultureInfo.InvariantCulture) == "crops")
+            //        .Value.Value;
 
-            if (cropperPreValues != null && cropperPreValues.Any())
+            //var cropperPreValues = JsonConvert.DeserializeObject<List<ImageCropData>>(preValueJson);
+
+            var uQueryPreValues = uQuery.GetPreValues(dataTypeId);
+            var uQueryCrops = uQueryPreValues.FirstOrDefault(x => x.Alias == "crops");
+            if (uQueryCrops == null)
             {
-                var attemptHeal = ImageCropDataSetRepair(cropDataSet, json, cropperPreValues);
-                return attemptHeal;
-            }     
+                return null;
+            }
+
+            var uQueryCropperPreValues = JsonConvert.DeserializeObject<List<ImageCropData>>(uQueryCrops.Value);
+            if (uQueryCropperPreValues != null && uQueryCropperPreValues.Any())
+            {
+                return uQueryCropperPreValues;
+            }
 
             return null;
         }
@@ -288,25 +299,6 @@
             }
 
             return imageCrops;
-        }
-
-        private static ImageCropData GetCrop(this ImageCropDataSet dataset, string cropAlias)
-        {
-            if (dataset == null || dataset.Crops == null || !dataset.Crops.Any())
-                return null;
-
-            return dataset.Crops.GetCrop(cropAlias);
-        }
-
-        private static ImageCropData GetCrop(this IEnumerable<ImageCropData> dataset, string cropAlias)
-        {
-            if (dataset == null || !dataset.Any())
-                return null;
-
-            if (string.IsNullOrEmpty(cropAlias))
-                return dataset.FirstOrDefault();
-
-            return dataset.FirstOrDefault(x => x.Alias.ToLowerInvariant() == cropAlias.ToLowerInvariant());
         }
     }
 }
