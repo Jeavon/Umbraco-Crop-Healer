@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Our.Umbraco.CropHealer.Tests")]
+
 namespace Our.Umbraco.CropHealer
 {
     using System;
