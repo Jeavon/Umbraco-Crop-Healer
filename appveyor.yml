@@ -12,6 +12,10 @@ install:
 # to disable automatic builds
 build: off
 
+test:
+  assemblies:
+    - '**\*.Tests.dll'
+
 artifacts:
   - path: BuildPackage\Package\*.nupkg
   - path: BuildPackage\Package\*.zip
