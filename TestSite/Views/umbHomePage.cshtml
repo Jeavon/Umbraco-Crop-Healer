@@ -1,3 +1,5 @@
+@using Newtonsoft.Json
+@using Umbraco.Web.Models
 @inherits UmbracoTemplatePage
 @{
     Layout = "umbLayout.cshtml";
@@ -13,6 +15,29 @@
                 
                 <pre>
                     @(typedMedia.GetPropertyValue<string>("umbracoFile"))
+                    @{
+                        var imageCropDataSet = JsonConvert.DeserializeObject<ImageCropDataSet>(typedMedia.GetPropertyValue<string>("umbracoFile"));
+                        foreach (var crop in imageCropDataSet.Crops)
+                        {
+                            if (crop.Coordinates != null)
+                            {
+                                var sourceWidth = typedMedia.GetPropertyValue<int>(Constants.Conventions.Media.Width);
+                                var sourceHeight = typedMedia.GetPropertyValue<int>(Constants.Conventions.Media.Height);
+
+                                var x1 = Math.Round(crop.Coordinates.X1 * sourceWidth);
+                                var y1 = Math.Round(crop.Coordinates.Y1 * sourceHeight);
+                                var x2 = Math.Round((1 - crop.Coordinates.X2) * sourceWidth);
+                                var y2 = Math.Round((1 - crop.Coordinates.Y2) * sourceHeight);
+
+                                <pre>
+                                    Alias: @crop.Alias
+                                    x1: @x1, y1: @y1, x2: @x2, y2:@y2
+                                    sourceWidth: @sourceWidth
+                                    sourceHeight: @sourceHeight
+                                </pre>
+                            }
+                        }
+                    }
                 </pre>
                 <img src="@typedMedia.GetCropUrl("Wide")"/>
 

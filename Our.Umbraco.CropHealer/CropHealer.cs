@@ -85,7 +85,7 @@ namespace Our.Umbraco.CropHealer
                 {
                     var cropperPropertyValue = contentItem.GetValue<string>(cropperContentProperty.Alias);
                     var cropDataSet = cropperPropertyValue.SerializeToCropDataSet();
-                    var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, dataTypeCrops);
+                    var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, 0, 0, dataTypeCrops);
 
                     if (attemptHeal != null)
                     {
@@ -127,7 +127,7 @@ namespace Our.Umbraco.CropHealer
 
                     var cropDataSet = cropperPropertyValue.SerializeToCropDataSet();
 
-                    var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, dataTypeCrops);
+                    var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, 0, 0, dataTypeCrops);
                     if (attemptHeal != null)
                     {
                         mediaItem.SetValue(cropperContentProperty.Alias, attemptHeal);
@@ -155,7 +155,7 @@ namespace Our.Umbraco.CropHealer
 
                     var cropDataSet = cropperPropertyValue.SerializeToCropDataSet();
 
-                    var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, dataTypeCrops);
+                    var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, 0, 0, dataTypeCrops);
                     if (attemptHeal != null)
                     {
                         memberItem.SetValue(cropperContentProperty.Alias, attemptHeal);
@@ -199,7 +199,7 @@ namespace Our.Umbraco.CropHealer
             return null;
         }
 
-        internal static string ImageCropDataSetRepair(this ImageCropDataSet cropDataSet, string json, List<ImageCropData> imageCrops = null)
+        internal static string ImageCropDataSetRepair(this ImageCropDataSet cropDataSet, string json, int sourceWidthPx, int sourceHeightPx, List<ImageCropData> imageCrops = null)
         {
             var healedSomething = false;
 
@@ -244,6 +244,41 @@ namespace Our.Umbraco.CropHealer
                     if (cropDefInCurrent != null && (cropDef.Width != cropDefInCurrent.Width || cropDef.Height != cropDefInCurrent.Height))
                     {
                         var index = currentCrops.IndexOf(cropDefInCurrent);
+
+                        // see if we can calculate new coordinates
+                        if (cropDefInCurrent.Coordinates != null && sourceHeightPx > 0 && sourceWidthPx > 0)
+                        {
+                            // crop height changed
+                            if (cropDef.Height != cropDefInCurrent.Height)
+                            {
+                                // try to extend down first
+                                var heightChange = cropDef.Height - cropDefInCurrent.Height;
+                                var heightChangePercentage = (decimal)heightChange / sourceHeightPx;
+                                
+                                // check we are not going to hit the bottom
+                                if ((cropDefInCurrent.Coordinates.Y2 - heightChangePercentage) >= 0)
+                                {
+                                    cropDefInCurrent.Coordinates.Y2 = cropDefInCurrent.Coordinates.Y2
+                                                                      - heightChangePercentage;
+                                }
+                                else if ((cropDefInCurrent.Coordinates.Y1 - heightChangePercentage) >= 0)
+                                {
+                                    cropDefInCurrent.Coordinates.Y1 = cropDefInCurrent.Coordinates.Y1
+                                                                      - heightChangePercentage;
+                                }
+                                else
+                                {
+                                    // if it's too big to grow, clear the coords
+                                    cropDefInCurrent.Coordinates = null;
+                                }
+                            }
+
+                            // crop width changed
+                            if (cropDefInCurrent.Coordinates != null && cropDef.Width != cropDefInCurrent.Width)
+                            {
+                                // ** Coming Soon
+                            }
+                        }
 
                         cropDefInCurrent.Width = cropDef.Width;
                         cropDefInCurrent.Height = cropDef.Height;

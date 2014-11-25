@@ -20,7 +20,7 @@
 
             var cropDataSet = sampleJson.SerializeToCropDataSet();
 
-            Assert.AreEqual(expectedJson, cropDataSet.ImageCropDataSetRepair(sampleJson));
+            Assert.AreEqual(expectedJson, cropDataSet.ImageCropDataSetRepair(sampleJson, 0, 0));
         }
 
         [Test]
@@ -32,7 +32,7 @@
 
             var cropDataSet = sampleJson.SerializeToCropDataSet();
 
-            Assert.AreEqual(null, cropDataSet.ImageCropDataSetRepair(sampleJson));
+            Assert.AreEqual(null, cropDataSet.ImageCropDataSetRepair(sampleJson, 0, 0));
         }
 
         [Test]
@@ -44,7 +44,7 @@
 
             var cropDataSet = sampleJson.SerializeToCropDataSet();
 
-            Assert.AreEqual(expectedJson, cropDataSet.ImageCropDataSetRepair(sampleJson));
+            Assert.AreEqual(expectedJson, cropDataSet.ImageCropDataSetRepair(sampleJson, 0, 0));
         }
 
         [Test]
@@ -63,7 +63,7 @@
                                    new ImageCropData() { Alias = "home", Width = 270, Height = 161 }
                                };
 
-            Assert.AreEqual(expectedJson, cropDataSet.ImageCropDataSetRepair(sampleJson, homeCrop));
+            Assert.AreEqual(expectedJson, cropDataSet.ImageCropDataSetRepair(sampleJson, 0, 0, homeCrop));
         }
 
         [Test]
@@ -78,7 +78,7 @@
                                {
                                    new ImageCropData() { Alias = "home", Width = 270, Height = 161 }
                                };
-            Assert.AreEqual(null, cropDataSet.ImageCropDataSetRepair(sampleJson, homeCrop));
+            Assert.AreEqual(null, cropDataSet.ImageCropDataSetRepair(sampleJson, 0, 0, homeCrop));
         }
 
         [Test]
@@ -100,7 +100,7 @@
                                            Height = 100
                                        }
                                };
-            Assert.AreEqual(null, cropDataSet.ImageCropDataSetRepair(sampleJson, homeCrop));
+            Assert.AreEqual(null, cropDataSet.ImageCropDataSetRepair(sampleJson, 0, 0, homeCrop));
         }
 
         [Test]
@@ -126,7 +126,7 @@
                                            Height = 100
                                        }
                                };
-            Assert.AreEqual(expectedJson, cropDataSet.ImageCropDataSetRepair(sampleJson, homeCrop));
+            Assert.AreEqual(expectedJson, cropDataSet.ImageCropDataSetRepair(sampleJson, 0, 0, homeCrop));
         }
 
         [Test]
@@ -146,7 +146,7 @@
                                {
                                    new ImageCropData() { Alias = "home", Width = 270, Height = 161 },
                                };
-            Assert.AreEqual(expectedJson, cropDataSet.ImageCropDataSetRepair(sampleJson, homeCrop));
+            Assert.AreEqual(expectedJson, cropDataSet.ImageCropDataSetRepair(sampleJson, 0, 0, homeCrop));
         }
 
         [Test]
@@ -177,7 +177,75 @@
                                            Height = 200
                                        }
                                };
-            Assert.AreEqual(expectedJson, cropDataSet.ImageCropDataSetRepair(sampleJson, homeCrop));
+            Assert.AreEqual(expectedJson, cropDataSet.ImageCropDataSetRepair(sampleJson, 0, 0, homeCrop));
+        }
+
+        [Test]
+        public void TestCheckAndHealCropIncreaseHeight()
+        {
+            var sampleJson = "{" + "\"src\":\"/media/1002/img_5227.jpg\"," + "\"focalPoint\":{" + "\"left\":0.5,"
+                             + "\"top\":0.5" + "}," + "\"crops\":[" + "{" + "\"alias\":\"thumb\"," + "\"width\":300,"
+                             + "\"height\":100," + "\"coordinates\":{" + "\"x1\":0.166,"
+                             + "\"y1\":0.333," + "\"x2\":0.333,"
+                             + "\"y2\":0.5" + "}" + "}" + "]" + "}";
+
+            var expectedJson = "{" + "\"src\":\"/media/1002/img_5227.jpg\"," + "\"focalPoint\":{" + "\"left\":0.5,"
+                             + "\"top\":0.5" + "}," + "\"crops\":[" + "{" + "\"alias\":\"thumb\"," + "\"width\":300,"
+                             + "\"height\":200," + "\"coordinates\":{" + "\"x1\":0.166,"
+                             + "\"y1\":0.333," + "\"x2\":0.333,"
+                             + "\"y2\":0.3333333333333333333333333333" + "}" + "}" + "]" + "}";
+
+            var cropDataSet = sampleJson.SerializeToCropDataSet();
+            var homeCrop = new List<ImageCropData>()
+                               {
+                                   new ImageCropData() { Alias = "thumb", Width = 300, Height = 200 }
+                               };
+            Assert.AreEqual(expectedJson, cropDataSet.ImageCropDataSetRepair(sampleJson, 600, 600, homeCrop));
+        }
+
+        [Test]
+        public void TestCheckAndHealCropIncreaseHeightBounce()
+        {
+            var sampleJson = "{" + "\"src\":\"/media/1002/img_5227.jpg\"," + "\"focalPoint\":{" + "\"left\":0.5,"
+                             + "\"top\":0.5" + "}," + "\"crops\":[" + "{" + "\"alias\":\"thumb\"," + "\"width\":300,"
+                             + "\"height\":100," + "\"coordinates\":{" + "\"x1\":0.166,"
+                             + "\"y1\":0.833," + "\"x2\":0.333,"
+                             + "\"y2\":0" + "}" + "}" + "]" + "}";
+
+            var expectedJson = "{" + "\"src\":\"/media/1002/img_5227.jpg\"," + "\"focalPoint\":{" + "\"left\":0.5,"
+                             + "\"top\":0.5" + "}," + "\"crops\":[" + "{" + "\"alias\":\"thumb\"," + "\"width\":300,"
+                             + "\"height\":200," + "\"coordinates\":{" + "\"x1\":0.166,"
+                             + "\"y1\":0.6663333333333333333333333333," + "\"x2\":0.333,"
+                             + "\"y2\":0.0" + "}" + "}" + "]" + "}";
+
+            var cropDataSet = sampleJson.SerializeToCropDataSet();
+            var homeCrop = new List<ImageCropData>()
+                               {
+                                   new ImageCropData() { Alias = "thumb", Width = 300, Height = 200 }
+                               };
+            Assert.AreEqual(expectedJson, cropDataSet.ImageCropDataSetRepair(sampleJson, 600, 600, homeCrop));
+        }
+
+
+        [Test]
+        public void TestCheckAndHealCropIncreaseHeightTooBig()
+        {
+            var sampleJson = "{" + "\"src\":\"/media/1002/img_5227.jpg\"," + "\"focalPoint\":{" + "\"left\":0.5,"
+                             + "\"top\":0.5" + "}," + "\"crops\":[" + "{" + "\"alias\":\"thumb\"," + "\"width\":300,"
+                             + "\"height\":100," + "\"coordinates\":{" + "\"x1\":0.166,"
+                             + "\"y1\":0.833," + "\"x2\":0.333,"
+                             + "\"y2\":0" + "}" + "}" + "]" + "}";
+
+            var expectedJson = "{" + "\"src\":\"/media/1002/img_5227.jpg\"," + "\"focalPoint\":{" + "\"left\":0.5,"
+                             + "\"top\":0.5" + "}," + "\"crops\":[" + "{" + "\"alias\":\"thumb\"," + "\"width\":300,"
+                             + "\"height\":1000" + "}" + "]" + "}";
+
+            var cropDataSet = sampleJson.SerializeToCropDataSet();
+            var homeCrop = new List<ImageCropData>()
+                               {
+                                   new ImageCropData() { Alias = "thumb", Width = 300, Height = 1000 }
+                               };
+            Assert.AreEqual(expectedJson, cropDataSet.ImageCropDataSetRepair(sampleJson, 600, 600, homeCrop));
         }
     }
 }
