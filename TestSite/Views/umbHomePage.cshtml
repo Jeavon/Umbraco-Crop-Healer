@@ -1,6 +1,8 @@
 @inherits UmbracoTemplatePage
 @{
     Layout = "umbLayout.cshtml";
+
+    var typedMedia = Umbraco.TypedMedia(1080);
 }
 @{ Html.RenderPartial("umbHomepageBanner"); }
 <!-- Main -->
@@ -8,6 +10,12 @@
     <div id="main" class="container">
         <div class="row">
             <div class="12u">
+                
+                <pre>
+                    @(typedMedia.GetPropertyValue<string>("umbracoFile"))
+                </pre>
+                <img src="@typedMedia.GetCropUrl("Wide")"/>
+
                 @{ Html.RenderPartial("umbFeatures"); }
             </div>
         </div>
