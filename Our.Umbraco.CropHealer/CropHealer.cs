@@ -1,4 +1,13 @@
-﻿using System.Runtime.CompilerServices;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="CropHealer.cs" company="Our Umbraco">
+//   OurUmbraco
+// </copyright>
+// <summary>
+//   Crop Healer class to update content, media & member image cropper JSON with new values
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Our.Umbraco.CropHealer.Tests")]
 
@@ -72,8 +81,7 @@ namespace Our.Umbraco.CropHealer
                     var allMembersUsingThis = mems.GetMembersByMemberType(memberTypeId);
                     HealMemberItems(allMembersUsingThis, cropperContentProperties, dataTypeCrops, dts, mems);
                 }
-            }
-            
+            }            
         }
 
         private static void HealContentItems(IEnumerable<IContent> content, IEnumerable<PropertyType> cropperContentProperties, List<ImageCropData> dataTypeCrops, IDataTypeService dts, IContentService cs)
@@ -253,12 +261,12 @@ namespace Our.Umbraco.CropHealer
 
             if (imageCrops != null && imageCrops.Any())
             {
-
                 var currentCrops = new List<ImageCropData>();
 
                 if (cropDataSet.Crops != null)
                 {
                     currentCrops = cropDataSet.Crops.ToList();
+
                     // delete crops that have been removed from the data type
                     foreach (var crop in cropDataSet.Crops)
                     {
@@ -268,7 +276,6 @@ namespace Our.Umbraco.CropHealer
                             healedSomething = true;
                         }
                     }
-
                 }
 
                 foreach (var cropDef in imageCrops)
