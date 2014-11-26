@@ -8,13 +8,11 @@ namespace Our.Umbraco.CropHealer
     using System.Collections.Generic;
     using System.Linq;
 
-    using global::Umbraco.Core.IO;
-
     using Newtonsoft.Json;
 
     using umbraco;
-
     using global::Umbraco.Core;
+    using global::Umbraco.Core.IO;
     using global::Umbraco.Core.Logging;
     using global::Umbraco.Core.Models;
     using global::Umbraco.Core.Services;
@@ -87,7 +85,10 @@ namespace Our.Umbraco.CropHealer
                 {
                     var cropperPropertyValue = contentItem.GetValue<string>(cropperContentProperty.Alias);
                     var cropDataSet = cropperPropertyValue.SerializeToCropDataSet();
-                    var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, 0, 0, dataTypeCrops);
+
+                    var imageDimensions = GetMediaFileDimensions(cropDataSet.Src);
+
+                    var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, imageDimensions.Width, imageDimensions.Height, dataTypeCrops);
 
                     if (attemptHeal != null)
                     {
@@ -129,7 +130,21 @@ namespace Our.Umbraco.CropHealer
 
                     var cropDataSet = cropperPropertyValue.SerializeToCropDataSet();
 
-                    var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, 0, 0, dataTypeCrops);
+                    // Use values saved in media item if available before seeking out from file system
+                    var imageDimensions = new ImageDimensions();
+
+                    if (mediaItem.HasProperty(Constants.Conventions.Media.Width)
+                        && mediaItem.HasProperty(Constants.Conventions.Media.Height))
+                    {
+                        imageDimensions.Width = mediaItem.GetValue<int>(Constants.Conventions.Media.Width);
+                        imageDimensions.Height = mediaItem.GetValue<int>(Constants.Conventions.Media.Height);
+                    }
+                    else
+                    {
+                        imageDimensions = GetMediaFileDimensions(cropDataSet.Src);
+                    }
+
+                    var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, imageDimensions.Width, imageDimensions.Height, dataTypeCrops);
                     if (attemptHeal != null)
                     {
                         mediaItem.SetValue(cropperContentProperty.Alias, attemptHeal);
@@ -157,7 +172,9 @@ namespace Our.Umbraco.CropHealer
 
                     var cropDataSet = cropperPropertyValue.SerializeToCropDataSet();
 
-                    var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, 0, 0, dataTypeCrops);
+                    var imageDimensions = GetMediaFileDimensions(cropDataSet.Src);
+
+                    var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, imageDimensions.Width, imageDimensions.Height, dataTypeCrops);
                     if (attemptHeal != null)
                     {
                         memberItem.SetValue(cropperContentProperty.Alias, attemptHeal);
