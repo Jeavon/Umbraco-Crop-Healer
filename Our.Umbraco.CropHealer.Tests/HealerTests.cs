@@ -216,7 +216,7 @@
                              + "\"top\":0.5" + "}," + "\"crops\":[" + "{" + "\"alias\":\"thumb\"," + "\"width\":300,"
                              + "\"height\":200," + "\"coordinates\":{" + "\"x1\":0.166,"
                              + "\"y1\":0.66633333333333333," + "\"x2\":0.333,"
-                             + "\"y2\":0.0" + "}" + "}" + "]" + "}";
+                             + "\"y2\":0" + "}" + "}" + "]" + "}";
 
             var cropDataSet = sampleJson.SerializeToCropDataSet();
             var homeCrop = new List<ImageCropData>()
@@ -260,7 +260,7 @@
             var expectedJson = "{" + "\"src\":\"/media/1001/gridfw.png\"," + "\"focalPoint\":{" + "\"left\":0.5,"
                                + "\"top\":0.5" + "}," + "\"crops\":[" + "{" + "\"alias\":\"Thumb\"," + "\"width\":400,"
                                + "\"height\":300" + "}," + "{" + "\"alias\":\"Wide\"," + "\"width\":400,"
-                               + "\"height\":100," + "\"coordinates\":{" + "\"x1\":0.0," + "\"y1\":0.0,"
+                               + "\"height\":100," + "\"coordinates\":{" + "\"x1\":0," + "\"y1\":0,"
                                + "\"x2\":0.33283283283283279," + "\"y2\":0.83316649983316649" + "}" + "}" + "]" + "}";
 
             var cropDataSet = sampleJson.SerializeToCropDataSet();
@@ -279,14 +279,14 @@
                              + "\"top\":0.5" + "}," + "\"crops\":[" + "{" + "\"alias\":\"Thumb\"," + "\"width\":400,"
                              + "\"height\":300" + "}," + "{" + "\"alias\":\"Wide\"," + "\"width\":300,"
                              + "\"height\":100," + "\"coordinates\":{" + "\"x1\":0.49948385885885888,"
-                             + "\"y1\":0.16683350016683351," + "\"x2\":0.0,"
+                             + "\"y1\":0.16683350016683351," + "\"x2\":0,"
                              + "\"y2\":0.666332999666333" + "}" + "}" + "]" + "}";
 
             var expectedJson = "{" + "\"src\":\"/media/1001/gridfw.png\"," + "\"focalPoint\":{" + "\"left\":0.5,"
                                + "\"top\":0.5" + "}," + "\"crops\":[" + "{" + "\"alias\":\"Thumb\"," + "\"width\":400,"
                                + "\"height\":300" + "}," + "{" + "\"alias\":\"Wide\"," + "\"width\":400,"
                                + "\"height\":100," + "\"coordinates\":{" + "\"x1\":0.33281719219219221,"
-                               + "\"y1\":0.16683350016683351," + "\"x2\":0.0," + "\"y2\":0.666332999666333" + "}" + "}"
+                               + "\"y1\":0.16683350016683351," + "\"x2\":0," + "\"y2\":0.666332999666333" + "}" + "}"
                                + "]" + "}";
 
             var cropDataSet = sampleJson.SerializeToCropDataSet();

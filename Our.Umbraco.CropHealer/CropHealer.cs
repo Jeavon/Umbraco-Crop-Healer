@@ -325,9 +325,12 @@ namespace Our.Umbraco.CropHealer
 
             if (healedSomething)
             {
-                return JsonConvert.SerializeObject(
-                    cropDataSet,
-                    new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                return
+                    JsonConvert.SerializeObject(
+                        cropDataSet,
+                        new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore })
+                        .Replace(":0.0,", ":0,")
+                        .Replace(":0.0}", ":0}");
             }
 
             return null;
