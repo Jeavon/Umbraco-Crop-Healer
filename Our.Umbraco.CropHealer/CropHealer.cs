@@ -253,9 +253,9 @@ namespace Our.Umbraco.CropHealer
                             {
                                 // try to extend down first
                                 var heightChange = cropDef.Height - cropDefInCurrent.Height;
-                                var heightChangePercentage = (decimal)heightChange / sourceHeightPx;
+                                var heightChangePercentage = Math.Round((decimal)heightChange / sourceHeightPx, 17);
                                 
-                                // check we are not going to hit the bottom
+                                // check we are not going to hit the bottom else extend up
                                 if ((cropDefInCurrent.Coordinates.Y2 - heightChangePercentage) >= 0)
                                 {
                                     cropDefInCurrent.Coordinates.Y2 = cropDefInCurrent.Coordinates.Y2
@@ -276,7 +276,26 @@ namespace Our.Umbraco.CropHealer
                             // crop width changed
                             if (cropDefInCurrent.Coordinates != null && cropDef.Width != cropDefInCurrent.Width)
                             {
-                                // ** Coming Soon
+                                // try to extend to the right first
+                                var widthChange = cropDef.Width - cropDefInCurrent.Width;
+                                var widthChangePercentage = Math.Round((decimal)widthChange / sourceWidthPx, 17);
+
+                                // check we are not going to hit the right else extend to the left
+                                if ((cropDefInCurrent.Coordinates.X2 - widthChangePercentage) >= 0)
+                                {
+                                    cropDefInCurrent.Coordinates.X2 = cropDefInCurrent.Coordinates.X2
+                                                                      - widthChangePercentage;
+                                }
+                                else if ((cropDefInCurrent.Coordinates.X1 - widthChangePercentage) >= 0)
+                                {
+                                    cropDefInCurrent.Coordinates.X1 = cropDefInCurrent.Coordinates.X1
+                                                                      - widthChangePercentage;
+                                }
+                                else
+                                {
+                                    // if it's too big to grow, clear the coords
+                                    cropDefInCurrent.Coordinates = null;
+                                }
                             }
                         }
 
@@ -293,7 +312,6 @@ namespace Our.Umbraco.CropHealer
                         currentCrops.Add(cropDef);
                         healedSomething = true;
                     }
-
                 }
 
                 if (cropDataSet.Crops == null)

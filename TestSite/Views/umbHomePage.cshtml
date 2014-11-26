@@ -39,8 +39,11 @@
                         }
                     }
                 </pre>
-                <img src="@typedMedia.GetCropUrl("Wide")"/>
 
+                <img src="@typedMedia.GetCropUrl("Wide")"/>
+                <textarea rows="20" cols="60">
+                    @Html.Raw("\"" + typedMedia.GetPropertyValue<string>("umbracoFile").Replace("\"", "\\\"").Replace(System.Environment.NewLine, "\" + " + System.Environment.NewLine + "\"").Replace(" ", "") + "\"") 
+                </textarea>
                 @{ Html.RenderPartial("umbFeatures"); }
             </div>
         </div>
