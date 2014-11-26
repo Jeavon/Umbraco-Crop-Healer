@@ -8,6 +8,8 @@ namespace Our.Umbraco.CropHealer
     using System.Collections.Generic;
     using System.Linq;
 
+    using global::Umbraco.Core.IO;
+
     using Newtonsoft.Json;
 
     using umbraco;
@@ -197,6 +199,22 @@ namespace Our.Umbraco.CropHealer
             }
 
             return null;
+        }
+
+        private static ImageDimensions GetMediaFileDimensions(string mediaItemUrl)
+        {
+            var mediaFileSystem = FileSystemProviderManager.Current.GetFileSystemProvider<MediaFileSystem>();
+            var fullPath = mediaFileSystem.GetFullPath(mediaFileSystem.GetRelativePath(mediaItemUrl));
+            var umbracoFile = new UmbracoMediaFile(fullPath);
+            var umbracoFileDimensions = umbracoFile.GetDimensions();
+
+            return new ImageDimensions { Width = umbracoFileDimensions.Width, Height = umbracoFileDimensions.Height };       
+        }
+
+        private class ImageDimensions
+        {
+            public int Width { get; set; }
+            public int Height { get; set; }
         }
 
         internal static string ImageCropDataSetRepair(this ImageCropDataSet cropDataSet, string json, int sourceWidthPx, int sourceHeightPx, List<ImageCropData> imageCrops = null)
