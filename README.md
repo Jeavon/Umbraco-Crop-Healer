@@ -8,6 +8,19 @@ Please note that if you have a used a particular cropper data type on a lot of i
 
 ![LogViewer](https://raw.githubusercontent.com/Jeavon/Umbraco-Crop-Healer/master/Docs/LogViewer.jpg)
 
+## Downloads ##
+
+### Release ###
+
+NuGet - Coming soon
+Umbraco Package - Coming soon
+
+### Pre-release ###
+
+[MyGet](https://www.myget.org/gallery/umbraco-crop-healer) - for the very latest NuGet package built fresh from source code
+[AppVeyor](https://ci.appveyor.com/project/JeavonLeopold/umbraco-crop-healer/build/artifacts) - for the very latest Umbraco package built fresh from source code (download the Zip archive)
+
+
 ## Test Site ##
 
 The username and password for the test site are admin/password
