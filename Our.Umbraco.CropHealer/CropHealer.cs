@@ -88,6 +88,8 @@ namespace Our.Umbraco.CropHealer
         {
             foreach (var contentItem in content)
             {
+                var healedAProperty = false;
+
                 // There could be multiple uses of the same datatype on the content type 
                 foreach (var cropperContentProperty in cropperContentProperties)
                 {
@@ -96,33 +98,49 @@ namespace Our.Umbraco.CropHealer
 
                     var imageDimensions = GetMediaFileDimensions(cropDataSet.Src);
 
-                    var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, imageDimensions.Width, imageDimensions.Height, dataTypeCrops);
-
-                    if (attemptHeal != null)
+                    if (imageDimensions != null)
                     {
-                        contentItem.SetValue(cropperContentProperty.Alias, attemptHeal);
+                        var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, imageDimensions.Width, imageDimensions.Height, dataTypeCrops);
+                        if (attemptHeal != null)
+                        {
+                            contentItem.SetValue(cropperContentProperty.Alias, attemptHeal);
+                            healedAProperty = true;
+                        }
+                    }
+                    else
+                    {
+                        LogHelper.Info(
+                            typeof(CropHealer),
+                            string.Format(
+                                "Unable to attempt heal Image Cropper content property, possibly a svg or other format (NodeId:{0} DocumentTypeAlias:{1}, PropertyAlias:{2})",
+                                contentItem.Id,
+                                contentItem.ContentType.Alias,
+                                cropperContentProperty.Alias));
                     }
                 }
 
-                if (contentItem.Published)
+                if (healedAProperty)
                 {
-                    cs.SaveAndPublishWithStatus(contentItem);
-                    LogHelper.Info(
-                        typeof(CropHealer),
-                        string.Format(
-                            "Healed a Image Cropper in content (NodeId:{0} DocumentTypeAlias:{1}) and Published",
-                            contentItem.Id,
-                            contentItem.ContentType.Alias));
-                }
-                else
-                {
-                    cs.Save(contentItem);
-                    LogHelper.Info(
-                        typeof(CropHealer),
-                        string.Format(
-                            "Healed a Image Cropper in content (NodeId:{0} DocumentTypeAlias:{1}) but didn't publish as it contained unpublished content",
-                            contentItem.Id,
-                            contentItem.ContentType.Alias));
+                    if (contentItem.Published)
+                    {
+                        cs.SaveAndPublishWithStatus(contentItem);
+                        LogHelper.Info(
+                            typeof(CropHealer),
+                            string.Format(
+                                "Healed a Image Cropper in content (NodeId:{0} DocumentTypeAlias:{1}) and Published",
+                                contentItem.Id,
+                                contentItem.ContentType.Alias));
+                    }
+                    else
+                    {
+                        cs.Save(contentItem);
+                        LogHelper.Info(
+                            typeof(CropHealer),
+                            string.Format(
+                                "Healed a Image Cropper in content (NodeId:{0} DocumentTypeAlias:{1}) but didn't publish as it contained unpublished content",
+                                contentItem.Id,
+                                contentItem.ContentType.Alias));
+                    }
                 }
             }
         }
@@ -131,7 +149,9 @@ namespace Our.Umbraco.CropHealer
         {
             foreach (var mediaItem in media)
             {
-                // There could be multiple uses of the same datatype on the content type 
+                var healedAProperty = false;
+             
+                // There could be multiple uses of the same datatype on the media type 
                 foreach (var cropperContentProperty in cropperContentProperties)
                 {
                     var cropperPropertyValue = mediaItem.GetValue<string>(cropperContentProperty.Alias);
@@ -142,30 +162,49 @@ namespace Our.Umbraco.CropHealer
                     var imageDimensions = new ImageDimensions();
 
                     if (mediaItem.HasProperty(Constants.Conventions.Media.Width)
-                        && mediaItem.HasProperty(Constants.Conventions.Media.Height))
+                        && mediaItem.HasProperty(Constants.Conventions.Media.Height) 
+                        && mediaItem.GetValue<int>(Constants.Conventions.Media.Width) > 0 
+                        && mediaItem.GetValue<int>(Constants.Conventions.Media.Height) > 0)
                     {
                         imageDimensions.Width = mediaItem.GetValue<int>(Constants.Conventions.Media.Width);
                         imageDimensions.Height = mediaItem.GetValue<int>(Constants.Conventions.Media.Height);
                     }
                     else
                     {
-                        imageDimensions = GetMediaFileDimensions(cropDataSet.Src);
+                        imageDimensions = GetMediaFileDimensions(cropDataSet.Src);                        
                     }
 
-                    var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, imageDimensions.Width, imageDimensions.Height, dataTypeCrops);
-                    if (attemptHeal != null)
+                    if (imageDimensions != null)
                     {
-                        mediaItem.SetValue(cropperContentProperty.Alias, attemptHeal);
+                        var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, imageDimensions.Width, imageDimensions.Height, dataTypeCrops);
+                        if (attemptHeal != null)
+                        {
+                            mediaItem.SetValue(cropperContentProperty.Alias, attemptHeal);
+                            healedAProperty = true;
+                        }
+                    } 
+                    else
+                    {
+                        LogHelper.Info(
+                            typeof(CropHealer),
+                            string.Format(
+                                "Unable to attempt heal Image Cropper media property, possibly a svg or other format (NodeId:{0} DocumentTypeAlias:{1}, PropertyAlias:{2})",
+                                mediaItem.Id,
+                                mediaItem.ContentType.Alias,
+                                cropperContentProperty.Alias));
                     }
                 }
 
-                ms.Save(mediaItem);
-                LogHelper.Info(
-                    typeof(CropHealer),
-                    string.Format(
-                        "Healed a Image Cropper in media (NodeId:{0} DocumentTypeAlias:{1})",
-                        mediaItem.Id,
-                        mediaItem.ContentType.Alias));             
+                if (healedAProperty)
+                {
+                    ms.Save(mediaItem);
+                    LogHelper.Info(
+                        typeof(CropHealer),
+                        string.Format(
+                            "Healed a Image Cropper in media (NodeId:{0} DocumentTypeAlias:{1})",
+                            mediaItem.Id,
+                            mediaItem.ContentType.Alias));
+                }
             }
         }
 
@@ -173,6 +212,8 @@ namespace Our.Umbraco.CropHealer
         {
             foreach (var memberItem in member)
             {
+                var healedAProperty = false;
+
                 // There could be multiple uses of the same datatype on the content type 
                 foreach (var cropperContentProperty in cropperContentProperties)
                 {
@@ -182,20 +223,37 @@ namespace Our.Umbraco.CropHealer
 
                     var imageDimensions = GetMediaFileDimensions(cropDataSet.Src);
 
-                    var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, imageDimensions.Width, imageDimensions.Height, dataTypeCrops);
-                    if (attemptHeal != null)
+                    if (imageDimensions != null)
                     {
-                        memberItem.SetValue(cropperContentProperty.Alias, attemptHeal);
+                        var attemptHeal = ImageCropDataSetRepair(cropDataSet, cropperPropertyValue, imageDimensions.Width, imageDimensions.Height, dataTypeCrops);
+                        if (attemptHeal != null)
+                        {
+                            memberItem.SetValue(cropperContentProperty.Alias, attemptHeal);
+                            healedAProperty = true;
+                        }
+                    }
+                    else
+                    {
+                        LogHelper.Info(
+                            typeof(CropHealer),
+                            string.Format(
+                                "Unable to attempt heal Image Cropper member property, possibly a svg or other format (NodeId:{0} DocumentTypeAlias:{1}, PropertyAlias:{2})",
+                                memberItem.Id,
+                                memberItem.ContentType.Alias,
+                                cropperContentProperty.Alias));
                     }
                 }
 
-                mems.Save(memberItem);
-                LogHelper.Info(
-                    typeof(CropHealer),
-                    string.Format(
-                        "Healed a Image Cropper in member (NodeId:{0} DocumentTypeAlias:{1})",
-                        memberItem.Id,
-                        memberItem.ContentType.Alias));
+                if (healedAProperty)
+                {
+                    mems.Save(memberItem);
+                    LogHelper.Info(
+                        typeof(CropHealer),
+                        string.Format(
+                            "Healed a Image Cropper in member (NodeId:{0} DocumentTypeAlias:{1})",
+                            memberItem.Id,
+                            memberItem.ContentType.Alias));
+                }
             }
         }
 
@@ -231,9 +289,18 @@ namespace Our.Umbraco.CropHealer
             var mediaFileSystem = FileSystemProviderManager.Current.GetFileSystemProvider<MediaFileSystem>();
             var fullPath = mediaFileSystem.GetFullPath(mediaFileSystem.GetRelativePath(mediaItemUrl));
             var umbracoFile = new UmbracoMediaFile(fullPath);
-            var umbracoFileDimensions = umbracoFile.GetDimensions();
+            
+            if (umbracoFile.Extension != "jpg" && umbracoFile.Extension != "png" && umbracoFile.Extension != "jpeg")
+            {
+                return null;
+            }
 
-            return new ImageDimensions { Width = umbracoFileDimensions.Width, Height = umbracoFileDimensions.Height };       
+            var umbracoFileDimensions = umbracoFile.GetDimensions();
+            return new ImageDimensions
+                       {
+                           Width = umbracoFileDimensions.Width,
+                           Height = umbracoFileDimensions.Height
+                       };
         }
 
         private class ImageDimensions
