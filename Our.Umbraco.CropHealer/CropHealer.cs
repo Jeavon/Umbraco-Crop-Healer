@@ -447,6 +447,11 @@ namespace Our.Umbraco.CropHealer
 
         private static bool DetectIsJson(this string input)
         {
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
             input = input.Trim();
             return (input.StartsWith("{") && input.EndsWith("}"))
                    || (input.StartsWith("[") && input.EndsWith("]"));
