@@ -286,21 +286,35 @@ namespace Our.Umbraco.CropHealer
 
         private static ImageDimensions GetMediaFileDimensions(string mediaItemUrl)
         {
-            var mediaFileSystem = FileSystemProviderManager.Current.GetFileSystemProvider<MediaFileSystem>();
-            var fullPath = mediaFileSystem.GetFullPath(mediaFileSystem.GetRelativePath(mediaItemUrl));
-            var umbracoFile = new UmbracoMediaFile(fullPath);
-            
-            if (umbracoFile.Extension != "jpg" && umbracoFile.Extension != "png" && umbracoFile.Extension != "jpeg")
+            if (string.IsNullOrEmpty(mediaItemUrl))
             {
                 return null;
             }
 
-            var umbracoFileDimensions = umbracoFile.GetDimensions();
-            return new ImageDimensions
-                       {
-                           Width = umbracoFileDimensions.Width,
-                           Height = umbracoFileDimensions.Height
-                       };
+            try
+            {
+                var mediaFileSystem = FileSystemProviderManager.Current.GetFileSystemProvider<MediaFileSystem>();
+                var fullPath = mediaFileSystem.GetFullPath(mediaFileSystem.GetRelativePath(mediaItemUrl));
+                var umbracoFile = new UmbracoMediaFile(fullPath);
+
+                if (umbracoFile.Extension != "jpg" && umbracoFile.Extension != "png" && umbracoFile.Extension != "jpeg")
+                {
+                    return null;
+                }
+
+                var umbracoFileDimensions = umbracoFile.GetDimensions();
+                return new ImageDimensions
+                           {
+                               Width = umbracoFileDimensions.Width,
+                               Height = umbracoFileDimensions.Height
+                           };
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error(typeof(CropHealer), string.Format("CropHealer - a exception occured while trying to determin image dimensions, media item url:{0}", mediaItemUrl), ex);
+                return null;
+            }
+            
         }
 
         private class ImageDimensions
