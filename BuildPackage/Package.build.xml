@@ -15,6 +15,12 @@
   <Import Project="$(AppVeyorUmbracoPath)\AppVeyorUmbraco.Targets" />
 
    <!-- PROPERTIES -->
+  <PropertyGroup>
+    <PackageName>Umbraco CropHealer</PackageName>
+    <Readme>This package adds and event handler to the save event of a data type to ensure changes to crops are propagated to content, media and content.</Readme>
+    <Summary>This package adds and event handler to the save event of a data type to ensure changes to crops are propagated to content, media and content.</Summary>
+  </PropertyGroup>
+  
   <PropertyGroup >
     <MinUmbracoVersion>$(UMBRACO_PACKAGE_MIN_VERSION)</MinUmbracoVersion>
     <FileVersion>$(APPVEYOR_BUILD_VERSION)</FileVersion>
@@ -84,38 +90,43 @@
     <Copy SourceFiles="@(NuSpecFile)" DestinationFolder="$(BuildNuGetDir)" />
   </Target>
 
-	<!-- MANIFEST -->
-	<Target Name="Manifest" DependsOnTargets="PrepairFiles">
-		<ItemGroup>
-			<ManifestFiles Include="$(BuildDir)\**\*" Exclude="$(BuildDir)\Package.xml" />
-		</ItemGroup>
-		<ManifestUpdate ManifestFile="$(BuildDir)\package.xml"
+  <!-- MANIFEST -->
+  <Target Name="ManifestUmbraco" DependsOnTargets="PrepairFiles">
+    <ItemGroup>
+      <ManifestFiles Include="$(BuildDir)\**\*" Exclude="$(BuildDir)\Package.xml" />
+    </ItemGroup>
+    <ManifestUpdate ManifestFile="$(BuildDir)\package.xml"
 			WorkingDirectory="$(BuildDir)"
 			MinimumRequiredUmbracoVersion="$(MinUmbracoVersion)"
+      PackageName="$(PackageName)"
 			PackageVersion="$(ProductVersion)"
+      Readme="$(Readme)"
 			Files="@(ManifestFiles)" />
-	</Target>
+  </Target>
 
   <!-- MANIFEST FOR NUGET PACKAGE -->
-  <Target Name="ManifestNuGet" DependsOnTargets="ManifestUmbraco">
+  <Target Name="ManifestNuGet" DependsOnTargets="PrepairFiles">
     <ItemGroup>
       <ManifestFiles Include="$(BuildNuGetDir)\**\*" Exclude="$(BuildNuGetDir)\package.nuspec" />
     </ItemGroup>
     <MSBuild.NuGet.Tasks.ManifestUpdate
 				ManifestFile="$(BuildNuGetDir)\package.nuspec"
 				WorkingDirectory="$(BuildNuGetDir)"
-        Title="$(ProjectName)"
-        Description="@(Readme->'%(Identity)', '%0a%0d')"
+        Title="$(PackageName)"
+        Description="$(Readme)"
+        Summary="$(Summary)"
 				Version="$(ProductVersion)"
+        MinimumRequiredUmbracoVersion = "$(MinUmbracoVersion)"
 				Files="@(ManifestFiles)" />
   </Target>
 
   <!-- PACKAGE -->
-	<Target Name="Package" DependsOnTargets="Manifest">
-		<ItemGroup>
-			<PackageFiles Include="$(BuildDir)\**\*.*" />
-		</ItemGroup>
-		<Package ManifestFile="$(BuildDir)\Package.xml"
+  <Target Name="Package" DependsOnTargets="ManifestUmbraco; ManifestNuGet">
+    <ItemGroup>
+      <PackageFiles Include="$(BuildDir)\**\*.*" />
+    </ItemGroup>
+
+    <Package ManifestFile="$(BuildDir)\Package.xml"
 			WorkingDirectory="$(BuildDir)"
 			OutputDirectory="$(PackageDir)"
 			Files="@(PackageFiles)" />
@@ -124,9 +135,9 @@
           ManifestFile="$(BuildNuGetDir)\package.nuspec"
           BasePath="$(BuildNuGetDir)"
           Version="$(ProductVersion)"
-          OutputDirectory="$(PackageDir)" />    
-    
-		<RemoveDir Directories="$(BuildDir)" Condition="Exists('$(BuildDir)')" />
+          OutputDirectory="$(PackageDir)" />
+
+    <RemoveDir Directories="$(BuildDir)" Condition="Exists('$(BuildDir)')" />
     <RemoveDir Directories="$(BuildNuGetDir)" Condition="Exists('$(BuildNuGetDir)')" />
 
   </Target>

@@ -2,7 +2,7 @@
 version: 0.1.0.{build}
 
 # UMBRACO_PACKAGE_PRERELEASE_SUFFIX will only be used for Release builds
-# example UMBRACO_PACKAGE_PRERELEASE_SUFFIX=-beta (hyphen must be included)
+# example UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
 install:
   - cmd: set UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
   - cmd: set UMBRACO_PACKAGE_MIN_VERSION=7.1.8
