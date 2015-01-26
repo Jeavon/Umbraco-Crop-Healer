@@ -1,4 +1,4 @@
-# Umbraco CropHealer #
+# Crop Healer for Umbraco #
 
 ![](CropHealer.png)
 
