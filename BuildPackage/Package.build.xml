@@ -16,7 +16,7 @@
 
    <!-- SHARED PROPERTIES -->
   <PropertyGroup>
-    <PackageName>Umbraco CropHealer</PackageName>
+    <PackageName>Crop Healer for Umbraco</PackageName>
     <Readme>This package adds and event handler to the save event of a data type to ensure changes to crops are propagated to content, media and content.</Readme>
     <AuthorName>Jeavon Leopold, The Umbraco Community</AuthorName>
     <AuthorUrl>http://our.umbraco.org</AuthorUrl>
@@ -130,7 +130,7 @@
         Description="$(Readme)"
         Summary="$(Readme)"
 				Version="$(ProductVersion)"
-        MinimumRequiredUmbracoVersion = "$(MinUmbracoVersion)"
+        MinimumRequiredUmbracoVersion ="$(MinUmbracoVersion)"
         Authors="$(AuthorName)"
         Owners="$(AuthorName)"
         Copyright="$(AuthorName)"
