@@ -4,8 +4,8 @@
 		<package>
 			<name></name>
 			<version>0.0.0</version>
-			<license url="http://www.opensource.org/licenses/mit-license.php">MIT license</license>
-			<url>https://github.com/Jeavon/Umbraco-Crop-Healer</url>
+			<license url=""></license>
+			<url></url>
 			<requirements>
 				<major>0</major>
 				<minor>0</minor>
@@ -13,8 +13,8 @@
 			</requirements>
 		</package>
 		<author>
-			<name>The Umbraco Community</name>
-			<website>http://our.umbraco.org</website>
+			<name></name>
+			<website></website>
 		</author>
 		<readme><![CDATA[]]></readme>
 	</info>

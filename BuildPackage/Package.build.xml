@@ -14,20 +14,29 @@
   <Import Project="$(MSBuildNugetTasksPath)\MSBuild.NuGet.Tasks.Targets" />
   <Import Project="$(AppVeyorUmbracoPath)\AppVeyorUmbraco.Targets" />
 
-   <!-- PROPERTIES -->
+   <!-- SHARED PROPERTIES -->
   <PropertyGroup>
     <PackageName>Umbraco CropHealer</PackageName>
     <Readme>This package adds and event handler to the save event of a data type to ensure changes to crops are propagated to content, media and content.</Readme>
-    <Summary>This package adds and event handler to the save event of a data type to ensure changes to crops are propagated to content, media and content.</Summary>
+    <AuthorName>Jeavon Leopold, The Umbraco Community</AuthorName>
+    <AuthorUrl>http://our.umbraco.org</AuthorUrl>
+    <PackageLicenseName>MIT license</PackageLicenseName>
+    <PackageLicenseUrl>http://www.opensource.org/licenses/mit-license.php</PackageLicenseUrl>
+    <ProjectUrl>https://github.com/Jeavon/Umbraco-Crop-Healer</ProjectUrl>
   </PropertyGroup>
-  
-  <PropertyGroup >
+
+  <!-- NUGET ONLY PROPERTIES -->
+  <PropertyGroup>
+    <PackageId>Our.Umbraco.CropHealer</PackageId>
+    <IconUrl>https://raw.githubusercontent.com/Jeavon/Umbraco-Crop-Healer/master/CropHealer.png</IconUrl>
+  </PropertyGroup>
+
+  <!-- APPVEYOR PROPERTIES -->
+  <PropertyGroup>
     <MinUmbracoVersion>$(UMBRACO_PACKAGE_MIN_VERSION)</MinUmbracoVersion>
     <FileVersion>$(APPVEYOR_BUILD_VERSION)</FileVersion>
   </PropertyGroup>
-  
-
-  <Choose >
+  <Choose>
     <When Condition="$(APPVEYOR_BUILD_NUMBER) != '' And $(APPVEYOR_REPO_BRANCH) != 'Release' ">
       <PropertyGroup>
         <VersionSuffix>build$(APPVEYOR_BUILD_NUMBER)</VersionSuffix>
@@ -40,6 +49,7 @@
     </Otherwise>
   </Choose>
 
+  <!-- PATHS -->
 	<PropertyGroup>
 		<RootDir>$(MSBuildProjectDirectory)\..</RootDir>
 		<BuildDir>$(MSBuildProjectDirectory)\Build</BuildDir>
@@ -49,7 +59,6 @@
 	</PropertyGroup>
 
 	<!-- TARGETS -->
-
   <Target Name="GenProductVersion">
     <GetProductVersion BuildVersion="$(APPVEYOR_BUILD_VERSION)" BuildSuffix="$(VersionSuffix)">
       <Output TaskParameter="ProductVersion" PropertyName="ProductVersion"/>
@@ -90,7 +99,7 @@
     <Copy SourceFiles="@(NuSpecFile)" DestinationFolder="$(BuildNuGetDir)" />
   </Target>
 
-  <!-- MANIFEST -->
+  <!-- MANIFEST UMBRACO -->
   <Target Name="ManifestUmbraco" DependsOnTargets="PrepairFiles">
     <ItemGroup>
       <ManifestFiles Include="$(BuildDir)\**\*" Exclude="$(BuildDir)\Package.xml" />
@@ -100,7 +109,12 @@
 			MinimumRequiredUmbracoVersion="$(MinUmbracoVersion)"
       PackageName="$(PackageName)"
 			PackageVersion="$(ProductVersion)"
+      AuthorName="$(AuthorName)"
+      AuthorUrl="$(AuthorUrl)"
       Readme="$(Readme)"
+      PackageLicenseName="$(PackageLicenseName)"
+      PackageLicenseUrl="$(PackageLicenseUrl)"
+      PackageUrl="$(ProjectUrl)"
 			Files="@(ManifestFiles)" />
   </Target>
 
@@ -114,9 +128,16 @@
 				WorkingDirectory="$(BuildNuGetDir)"
         Title="$(PackageName)"
         Description="$(Readme)"
-        Summary="$(Summary)"
+        Summary="$(Readme)"
 				Version="$(ProductVersion)"
         MinimumRequiredUmbracoVersion = "$(MinUmbracoVersion)"
+        Authors="$(AuthorName)"
+        Owners="$(AuthorName)"
+        Copyright="$(AuthorName)"
+        LicenseUrl="$(PackageLicenseUrl)"
+        ProjectUrl="$(ProjectUrl)"
+        Id="$(PackageId)"
+        IconUrl="$(IconUrl)"
 				Files="@(ManifestFiles)" />
   </Target>
 
@@ -137,8 +158,8 @@
           Version="$(ProductVersion)"
           OutputDirectory="$(PackageDir)" />
 
-    <RemoveDir Directories="$(BuildDir)" Condition="Exists('$(BuildDir)')" />
-    <RemoveDir Directories="$(BuildNuGetDir)" Condition="Exists('$(BuildNuGetDir)')" />
+    <!--<RemoveDir Directories="$(BuildDir)" Condition="Exists('$(BuildDir)')" />
+    <RemoveDir Directories="$(BuildNuGetDir)" Condition="Exists('$(BuildNuGetDir)')" />-->
 
   </Target>
 
