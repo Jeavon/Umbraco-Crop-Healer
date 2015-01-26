@@ -14,13 +14,13 @@ Please note that if you have a used a particular cropper data type on a lot of i
 
 ### Release ###
 
-- NuGet - Coming soon
-- Umbraco Package - Coming soon
+- [NuGet](https://www.nuget.org/packages/Our.Umbraco.CropHealer/) - the latest release version for **NuGet**
+- [Umbraco Package](http://our.umbraco.org/projects/collaboration/crop-healer-for-umbraco) - the latest release version for **Umbraco**
 
 ### Pre-release ###
 
-- [MyGet](https://www.myget.org/gallery/umbraco-crop-healer) for the very latest NuGet package built fresh from source code
-- [AppVeyor](https://ci.appveyor.com/project/JeavonLeopold/umbraco-crop-healer/build/artifacts) - for the very latest Umbraco package built fresh from source code (download the Zip archive)
+- [MyGet](https://www.myget.org/gallery/umbraco-crop-healer) for the very latest **NuGet** package built fresh from source code
+- [AppVeyor](https://ci.appveyor.com/project/JeavonLeopold/umbraco-crop-healer/build/artifacts) - for the very latest **Umbraco** package built fresh from source code (download the Zip archive)
 
 
 ## Test Site ##
