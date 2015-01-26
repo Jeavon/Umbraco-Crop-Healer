@@ -158,8 +158,8 @@
           Version="$(ProductVersion)"
           OutputDirectory="$(PackageDir)" />
 
-    <!--<RemoveDir Directories="$(BuildDir)" Condition="Exists('$(BuildDir)')" />
-    <RemoveDir Directories="$(BuildNuGetDir)" Condition="Exists('$(BuildNuGetDir)')" />-->
+    <RemoveDir Directories="$(BuildDir)" Condition="Exists('$(BuildDir)')" />
+    <RemoveDir Directories="$(BuildNuGetDir)" Condition="Exists('$(BuildNuGetDir)')" />
 
   </Target>
 
