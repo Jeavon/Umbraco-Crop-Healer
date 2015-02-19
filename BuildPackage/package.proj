@@ -90,7 +90,7 @@
 
 	<!-- COMPILE -->
 	<Target Name="Compile" DependsOnTargets="UpdateAssemblyInfo">
-		<MSBuild Projects="$(CoreProjectDir)\Our.Umbraco.CropHealer.csproj" />
+		<MSBuild Projects="$(CoreProjectDir)\Our.Umbraco.CropHealer.csproj" Properties="Configuration=$(BuildConfig)"/>
 	</Target>
 
   <!-- PREPARE FILES -->
