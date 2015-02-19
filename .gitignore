@@ -166,7 +166,7 @@ TestSite/[Bb]in/*
 # Crop Healer
 # =========================
 Our.Umbraco.CropHealer/bin/*
-BuildPackage/Package/*
+BuildPackage/artifacts/*
 # =========================
 # Umbraco
 # =========================
