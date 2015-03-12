@@ -3,13 +3,12 @@ version: 0.1.1.{build}
 
 # UMBRACO_PACKAGE_PRERELEASE_SUFFIX will only be used for Release builds
 # example UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
-install:
-  - cmd: set UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
+init:
+  - set UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
+
+build_script:
   - cmd: cd BuildPackage
   - cmd: Build.bat
-
-# to disable automatic builds
-build: off
 
 artifacts:
   - path: BuildPackage\artifacts\*.nupkg
