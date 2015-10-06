@@ -1,12 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Our.Umbraco.CropHealer", "Our.Umbraco.CropHealer\Our.Umbraco.CropHealer.csproj", "{C3B4FA13-3F87-4783-822D-883B5D7FE5D4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSite", "TestSite\TestSite.csproj", "{527C6E46-9B93-4014-9236-DBC3E4355F80}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildPackage", "BuildPackage", "{87A0BA0A-3151-4F30-BFC8-E4D4FCFFAFBC}"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
@@ -17,12 +13,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildPackage", "BuildPackag
 		BuildPackage\package.xml = BuildPackage\package.xml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Our.Umbraco.CropHealer.Tests", "Our.Umbraco.CropHealer.Tests\Our.Umbraco.CropHealer.Tests.csproj", "{FA8845C5-7948-493F-A1FB-8EAF1F82BFBD}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{FD4A46BD-C628-4B69-AD9A-901B2C45F14D}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Our.Umbraco.CropHealer", "Our.Umbraco.CropHealer\Our.Umbraco.CropHealer.csproj", "{C3B4FA13-3F87-4783-822D-883B5D7FE5D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSite", "TestSite\TestSite.csproj", "{527C6E46-9B93-4014-9236-DBC3E4355F80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Our.Umbraco.CropHealer.Tests", "Our.Umbraco.CropHealer.Tests\Our.Umbraco.CropHealer.Tests.csproj", "{FA8845C5-7948-493F-A1FB-8EAF1F82BFBD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
