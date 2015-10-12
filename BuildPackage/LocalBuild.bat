@@ -4,7 +4,7 @@ SET /P APPVEYOR_BUILD_NUMBER=Please enter a build number (e.g. 134):
 SET /P PACKAGE_VERISON=Please enter your package version (e.g. 1.0.5):
 SET /P UMBRACO_PACKAGE_PRERELEASE_SUFFIX=Please enter your package release suffix or leave empty (e.g. beta):
 
-SET /P APPVEYOR_REPO_TAG=If you want to simulate a GitHub tag for a release (e.g. true):
+SET /P APPVEYOR_REPO_BRANCH=If you want to simulate a specific branch (e.g. master):
 
 if "%APPVEYOR_BUILD_NUMBER%" == "" (
   SET APPVEYOR_BUILD_NUMBER=100
