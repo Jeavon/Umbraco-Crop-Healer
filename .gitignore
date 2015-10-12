@@ -170,6 +170,7 @@ TestSite/[Bb]in/*
 # =========================
 Our.Umbraco.CropHealer/bin/*
 BuildPackage/artifacts/*
+TestSite/App_Plugins/CropHealer/Install/**
 # =========================
 # Umbraco
 # =========================

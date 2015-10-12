@@ -22,19 +22,19 @@ namespace Our.Umbraco.CropHealer.Umbraco.Installer
             private bool Transform(string packageName, System.Xml.XmlNode xmlData, bool uninstall = false)
             {
                 //The config file we want to modify
+                var file = xmlData.Attributes.GetNamedItem("file").Value;
 
+                string sourceDocFileName = VirtualPathUtility.ToAbsolute(file);
+
+                //The xdt file used for tranformation 
+                //var xdtfile = xmlData.Attributes.GetNamedItem("xdtfile").Value;
                 var fileEnd = "install.xdt";
                 if (uninstall)
                 {
                     fileEnd = string.Format("un{0}", fileEnd);
                 }
 
-                var file = string.Format("{0}.{1}", xmlData.Attributes.GetNamedItem("file").Value, fileEnd);
-
-                string sourceDocFileName = VirtualPathUtility.ToAbsolute(file);
-
-                //The xdt file used for tranformation 
-                var xdtfile = xmlData.Attributes.GetNamedItem("xdtfile").Value;
+                var xdtfile = string.Format("{0}.{1}", xmlData.Attributes.GetNamedItem("xdtfile").Value, fileEnd);
                 string xdtFileName = VirtualPathUtility.ToAbsolute(xdtfile);
 
                 // The translation at-hand
