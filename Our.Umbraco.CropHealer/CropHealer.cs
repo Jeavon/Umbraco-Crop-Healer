@@ -7,6 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Configuration;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Our.Umbraco.CropHealer.Tests")]
@@ -39,11 +40,18 @@ namespace Our.Umbraco.CropHealer
             var mems = ApplicationContext.Current.Services.MemberService;
 
             var dataTypeId = dataType.Id;
-            
+
+            var cropHealerConfig = ConfigurationManager.GetSection("CropHealer") as CropHealerConfigSection;
+
             // A Image Cropper Data Type has been saved, lets go to work!
             var allContentTypes = cts.GetAllContentTypes();
             var allMediaTypes = cts.GetAllMediaTypes();
             var allMemberTypes = mts.GetAll();
+
+            if (cropHealerConfig != null)
+            {
+                allContentTypes = allContentTypes.Where(ct => !cropHealerConfig.Exclusions.DocumentTypes.Select(x => x.Alias).Contains(ct.Alias));
+            }
 
             var dataTypeCrops = GetCropsFromDataType(dataTypeId, dts);
 

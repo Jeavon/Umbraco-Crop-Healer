@@ -19,11 +19,11 @@ namespace Our.Umbraco.CropHealer
 
     public class ExclusionsElement : ConfigurationElement
     {
-        [ConfigurationProperty("documentTypes", IsDefaultCollection = true)]
+        [ConfigurationProperty("contentTypes", IsDefaultCollection = true)]
         public TypeElementCollection DocumentTypes
         {
-            get { return (TypeElementCollection) this["documentTypes"]; }
-            set { this["documentTypes"] = value; }
+            get { return (TypeElementCollection) this["contentTypes"]; }
+            set { this["contentTypes"] = value; }
         }
 
         [ConfigurationProperty("mediaTypes", IsDefaultCollection = true)]
