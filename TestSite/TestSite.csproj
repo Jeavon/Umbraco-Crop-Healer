@@ -120,6 +120,10 @@
       <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PackageActionTester, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NonNugetPackages\PackageActionTester\PackageActionTester.dll</HintPath>
+    </Reference>
     <Reference Include="SQLCE4Umbraco, Version=1.0.5529.18524, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\UmbracoCms.Core.7.2.2\lib\SQLCE4Umbraco.dll</HintPath>
       <Private>True</Private>
