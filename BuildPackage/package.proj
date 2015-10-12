@@ -23,7 +23,7 @@
     <AuthorUrl>http://our.umbraco.org</AuthorUrl>
     <PackageLicenseName>MIT license</PackageLicenseName>
     <PackageLicenseUrl>http://www.opensource.org/licenses/mit-license.php</PackageLicenseUrl>
-    <ProjectUrl>https://github.com/Jeavon/AppVeyorUmbracoPackage</ProjectUrl>
+    <ProjectUrl>https://github.com/Jeavon/Umbraco-Crop-Healer</ProjectUrl>
   </PropertyGroup>
 
   <!-- NUGET ONLY PROPERTIES -->
@@ -100,12 +100,14 @@
       <ConfigFile Include="$(CoreProjectDir)\Config\CropHealer.config" />
       <PackageFile Include="$(MSBuildProjectDirectory)\package.xml" />
       <NuSpecFile Include="$(MSBuildProjectDirectory)\package.nuspec" />
+      <XDTFiles Include="$(MSBuildProjectDirectory)\*.xdt" />
     </ItemGroup>
     <Copy SourceFiles="@(BinFiles)" DestinationFolder="$(BuildUmbDir)\bin" />
     <Copy SourceFiles="@(ConfigFile)" DestinationFolder="$(BuildUmbDir)\Config" />
     <Copy SourceFiles="@(PackageFile)" DestinationFolder="$(BuildUmbDir)" />
     <Copy SourceFiles="@(BinFiles)" DestinationFolder="$(BuildNuGetDir)\lib\net45" />
     <Copy SourceFiles="@(ConfigFile)" DestinationFolder="$(BuildNuGetDir)\Content\Config" />
+    <Copy SourceFiles="@(XDTFiles)" DestinationFolder="$(BuildNuGetDir)\Content" />
     <Copy SourceFiles="@(NuSpecFile)" DestinationFolder="$(BuildNuGetDir)" />
   </Target>
 

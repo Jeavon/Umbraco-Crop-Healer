@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+  <configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+    <configSections>
+      <section xdt:Locator="Match(name)" xdt:Transform="Remove" name="CropHealer" requirePermission="false" type="Our.Umbraco.CropHealer.CropHealerConfigSection, Our.Umbraco.CropHealer" />
+    </configSections>
+
+    <CropHealer xdt:Transform="Remove" configSource="config\CropHealer.config" />
+  </configuration>
