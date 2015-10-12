@@ -32,6 +32,13 @@ namespace Our.Umbraco.CropHealer
             get { return (TypeElementCollection)this["mediaTypes"]; }
             set { this["mediaTypes"] = value; }
         }
+
+        [ConfigurationProperty("memberTypes", IsDefaultCollection = true)]
+        public TypeElementCollection MemberTypes
+        {
+            get { return (TypeElementCollection)this["memberTypes"]; }
+            set { this["memberTypes"] = value; }
+        }
     }
 
     public class TypeElement : ConfigurationElement
