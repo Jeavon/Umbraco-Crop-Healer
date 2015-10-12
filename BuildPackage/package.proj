@@ -115,10 +115,13 @@
       <PackageFile Include="$(MSBuildProjectDirectory)\package.xml" />
       <NuSpecFile Include="$(MSBuildProjectDirectory)\package.nuspec" />
       <XDTFiles Include="$(MSBuildProjectDirectory)\*.xdt" />
+      <TransformBinFiles Include="$(CoreProjectDir)\bin\$(BuildConfig)\Microsoft.Web.XmlTransform.dll" />
     </ItemGroup>
     <Copy SourceFiles="@(BinFiles)" DestinationFolder="$(BuildUmbDir)\bin" />
+    <Copy SourceFiles="@(TransformBinFiles)" DestinationFolder="$(BuildUmbDir)\bin" />
     <Copy SourceFiles="@(ConfigFile)" DestinationFolder="$(BuildUmbDir)\Config" />
     <Copy SourceFiles="@(PackageFile)" DestinationFolder="$(BuildUmbDir)" />
+    <Copy SourceFiles="@(XDTFiles)" DestinationFolder="$(BuildUmbDir)\App_Plugins\CropHealer\Install" />
     <Copy SourceFiles="@(BinFiles)" DestinationFolder="$(BuildNuGetDir)\lib\net45" />
     <Copy SourceFiles="@(ConfigFile)" DestinationFolder="$(BuildNuGetDir)\Content\Config" />
     <Copy SourceFiles="@(XDTFiles)" DestinationFolder="$(BuildNuGetDir)\Content" />

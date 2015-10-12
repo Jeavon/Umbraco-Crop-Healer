@@ -27,7 +27,9 @@
   <Languages />
   <DataTypes />
 
-  <Actions/>
+  <Actions>
+    <Action runat="install" undo="true" alias="CropHealer.TransformConfig" file="~/web.config" xdtfile="~/App_Plugins/CropHealer/Install/web.config"></Action>
+  </Actions>
 
   <control />
 
