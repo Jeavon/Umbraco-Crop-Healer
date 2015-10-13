@@ -27,7 +27,6 @@ namespace Our.Umbraco.CropHealer.Umbraco.Installer
                 string sourceDocFileName = VirtualPathUtility.ToAbsolute(file);
 
                 //The xdt file used for tranformation 
-                //var xdtfile = xmlData.Attributes.GetNamedItem("xdtfile").Value;
                 var fileEnd = "install.xdt";
                 if (uninstall)
                 {
