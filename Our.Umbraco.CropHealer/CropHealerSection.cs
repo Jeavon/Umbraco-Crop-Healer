@@ -20,21 +20,21 @@ namespace Our.Umbraco.CropHealer
     public class ExclusionsElement : ConfigurationElement
     {
         [ConfigurationProperty("contentTypes", IsDefaultCollection = true)]
-        public GenericTypeElementCollection DocumentGenericTypes
+        public GenericTypeElementCollection ContentTypes
         {
             get { return (GenericTypeElementCollection) this["contentTypes"]; }
             set { this["contentTypes"] = value; }
         }
 
         [ConfigurationProperty("mediaTypes", IsDefaultCollection = true)]
-        public GenericTypeElementCollection MediaGenericTypes
+        public GenericTypeElementCollection MediaTypes
         {
             get { return (GenericTypeElementCollection)this["mediaTypes"]; }
             set { this["mediaTypes"] = value; }
         }
 
         [ConfigurationProperty("memberTypes", IsDefaultCollection = true)]
-        public GenericTypeElementCollection MemberGenericTypes
+        public GenericTypeElementCollection MemberTypes
         {
             get { return (GenericTypeElementCollection)this["memberTypes"]; }
             set { this["memberTypes"] = value; }

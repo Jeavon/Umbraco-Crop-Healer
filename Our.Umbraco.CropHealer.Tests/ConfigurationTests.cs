@@ -11,12 +11,12 @@ namespace Our.Umbraco.CropHealer.Tests
     public class ConfigurationTests
     {
         [Test]
-        public void BasicDocumentTypeElementTest()
+        public void BasicContentTypeElementTest()
         {
             var section = ConfigurationManager.GetSection("CropHealer")
                              as CropHealerConfigSection;
 
-            Assert.AreEqual(section.Exclusions.DocumentGenericTypes.FirstOrDefault().Alias, "umbNewsItem");
+            Assert.AreEqual(section.Exclusions.ContentTypes.FirstOrDefault().Alias, "umbNewsItem");
         }
 
         [Test]
@@ -25,7 +25,7 @@ namespace Our.Umbraco.CropHealer.Tests
             var section = ConfigurationManager.GetSection("CropHealer")
                              as CropHealerConfigSection;
 
-            Assert.AreEqual(section.Exclusions.MediaGenericTypes.FirstOrDefault().Alias, "Image");
+            Assert.AreEqual(section.Exclusions.MediaTypes.FirstOrDefault().Alias, "Image");
         }
 
         [Test]

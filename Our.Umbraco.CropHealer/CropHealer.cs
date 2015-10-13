@@ -50,7 +50,7 @@ namespace Our.Umbraco.CropHealer
 
             if (cropHealerConfig != null)
             {
-                allContentTypes = allContentTypes.Where(ct => !cropHealerConfig.Exclusions.DocumentTypes.Select(x => x.Alias).Contains(ct.Alias));
+                allContentTypes = allContentTypes.Where(ct => !cropHealerConfig.Exclusions.ContentTypes.Select(x => x.Alias).Contains(ct.Alias));
                 allMediaTypes = allMediaTypes.Where(ct => !cropHealerConfig.Exclusions.MediaTypes.Select(x => x.Alias).Contains(ct.Alias));
                 allMemberTypes = allMemberTypes.Where(ct => !cropHealerConfig.Exclusions.MemberTypes.Select(x => x.Alias).Contains(ct.Alias));
             }
