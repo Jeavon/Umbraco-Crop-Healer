@@ -20,28 +20,35 @@ namespace Our.Umbraco.CropHealer
     public class ExclusionsElement : ConfigurationElement
     {
         [ConfigurationProperty("contentTypes", IsDefaultCollection = true)]
-        public TypeElementCollection DocumentTypes
+        public GenericTypeElementCollection DocumentGenericTypes
         {
-            get { return (TypeElementCollection) this["contentTypes"]; }
+            get { return (GenericTypeElementCollection) this["contentTypes"]; }
             set { this["contentTypes"] = value; }
         }
 
         [ConfigurationProperty("mediaTypes", IsDefaultCollection = true)]
-        public TypeElementCollection MediaTypes
+        public GenericTypeElementCollection MediaGenericTypes
         {
-            get { return (TypeElementCollection)this["mediaTypes"]; }
+            get { return (GenericTypeElementCollection)this["mediaTypes"]; }
             set { this["mediaTypes"] = value; }
         }
 
         [ConfigurationProperty("memberTypes", IsDefaultCollection = true)]
-        public TypeElementCollection MemberTypes
+        public GenericTypeElementCollection MemberGenericTypes
         {
-            get { return (TypeElementCollection)this["memberTypes"]; }
+            get { return (GenericTypeElementCollection)this["memberTypes"]; }
             set { this["memberTypes"] = value; }
+        }
+
+        [ConfigurationProperty("dataTypes", IsDefaultCollection = true)]
+        public DataTypeElementCollection DataTypes
+        {
+            get { return (DataTypeElementCollection)this["dataTypes"]; }
+            set { this["dataTypes"] = value; }
         }
     }
 
-    public class TypeElement : ConfigurationElement
+    public class GenericTypeElement : ConfigurationElement
     {
         [ConfigurationProperty("alias", IsKey = true, IsRequired = true)]
         public string Alias
@@ -51,25 +58,58 @@ namespace Our.Umbraco.CropHealer
         }
     }
 
-    [ConfigurationCollection(typeof(TypeElement))]
-    public class TypeElementCollection : ConfigurationElementCollection, IEnumerable<TypeElement>
+    public class DataTypeElement : ConfigurationElement
+    {
+        [ConfigurationProperty("key", IsKey = false, IsRequired = true)]
+        public Guid Key
+        {
+            get { return (Guid)this["key"]; }
+            set { this["key"] = value; }
+        }
+    }
+
+    [ConfigurationCollection(typeof(GenericTypeElement))]
+    public class GenericTypeElementCollection : ConfigurationElementCollection, IEnumerable<GenericTypeElement>
     {
         protected override ConfigurationElement CreateNewElement()
         {
-            return new TypeElement();
+            return new GenericTypeElement();
         }
 
         protected override object GetElementKey(ConfigurationElement element)
         {
-            return ((TypeElement)element).Alias;
+            return ((GenericTypeElement)element).Alias;
         }
 
-        public new IEnumerator<TypeElement> GetEnumerator()
+        public new IEnumerator<GenericTypeElement> GetEnumerator()
         {
             int count = base.Count;
             for (int i = 0; i < count; i++)
             {
-                yield return base.BaseGet(i) as TypeElement;
+                yield return base.BaseGet(i) as GenericTypeElement;
+            }
+        }
+    }
+
+    [ConfigurationCollection(typeof(DataTypeElement))]
+    public class DataTypeElementCollection : ConfigurationElementCollection, IEnumerable<DataTypeElement>
+    {
+        protected override ConfigurationElement CreateNewElement()
+        {
+            return new DataTypeElement();
+        }
+
+        protected override object GetElementKey(ConfigurationElement element)
+        {
+            return ((DataTypeElement)element).Key;
+        }
+
+        public new IEnumerator<DataTypeElement> GetEnumerator()
+        {
+            int count = base.Count;
+            for (int i = 0; i < count; i++)
+            {
+                yield return base.BaseGet(i) as DataTypeElement;
             }
         }
     }
